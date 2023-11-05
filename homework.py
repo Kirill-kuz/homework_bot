@@ -110,10 +110,11 @@ def check_response(response):
         message = (f'Ответ API получен в виде {type(response)}, '
                    'а должен быть словарь')
         raise TypeError(message)
-    if 'current_date' not in response:
-        raise KeyError('Ключ current_date отсутствует')
-    if 'homeworks' not in response:
-        raise KeyError('Ключ homeworks отсутствует')
+    required_keys = ['current_date', 'homeworks']
+    missing_keys = [key for key in required_keys if key not in response]
+    if missing_keys:
+        error_message = 'Отсутствуют ключи: {}'.format(', '.join(missing_keys))
+        raise KeyError(error_message)
     homeworks = response.get('homeworks')
     if not isinstance(homeworks, list):
         message = (f'API вернул {type(homeworks)} под ключом homeworks, '
